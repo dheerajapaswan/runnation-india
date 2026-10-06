@@ -1,0 +1,100 @@
+// RunNation India database schema (Neon PostgreSQL via Prisma).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Distance {
+  D3K
+  D5K
+  D10K
+  D21K
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum MedalStatus {
+  NOT_READY
+  PACKED
+  SHIPPED
+  DELIVERED
+}
+
+enum ProofStatus {
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model Event {
+  id            String         @id @default(uuid())
+  slug          String         @unique
+  name          String
+  windowStart   DateTime?
+  windowEnd     DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  registrations Registration[]
+}
+
+model Registration {
+  id                String        @id @default(uuid())
+  /// Public registration ID, e.g. RV26-A1B2C3
+  code              String        @unique
+  /// Race number printed on the E-BIB. Sequential, starts at 1001.
+  bibNumber         Int           @unique @default(autoincrement())
+  eventId           String
+  event             Event         @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  fullName          String
+  email             String
+  mobile            String
+  dateOfBirth       DateTime      @db.Date
+  gender            String
+  distance          Distance
+  /// Fee in whole rupees, snapshotted server-side at registration time.
+  amountInr         Int
+  address           String
+  city              String
+  pincode           String
+  paymentStatus     PaymentStatus @default(PENDING)
+  medalStatus       MedalStatus   @default(NOT_READY)
+  certificateIssued Boolean       @default(false)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  proof             RunProof?
+
+  @@unique([eventId, email])
+  @@index([paymentStatus])
+  @@index([distance])
+}
+
+model RunProof {
+  id             String       @id @default(uuid())
+  registrationId String       @unique
+  registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  app            String
+  finishSeconds  Int
+  runDate        DateTime     @db.Date
+  /// Metadata only for now; object storage is wired later.
+  fileName       String
+  fileType       String
+  fileSize       Int
+  status         ProofStatus  @default(SUBMITTED)
+  /// Automatic screenshot analysis result (see src/server/proof-analysis.ts).
+  analysis       Json?
+  autoApproved   Boolean      @default(false)
+  reviewedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([status])
+}

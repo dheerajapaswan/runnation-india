@@ -1,0 +1,1 @@
+ALTER TABLE "RunProof" ADD COLUMN "analysis" JSONB, ADD COLUMN "autoApproved" BOOLEAN NOT NULL DEFAULT false;
