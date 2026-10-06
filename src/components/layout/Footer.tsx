@@ -46,7 +46,7 @@ export function Footer() {
         </div>
         <div className="mt-14 flex flex-col justify-between gap-3 border-t border-white/10 pt-6 text-xs text-mist sm:flex-row">
           <p>&copy; {new Date().getFullYear()} RunNation India. All rights reserved.</p>
-          <p>Made for runners, everywhere.</p>
+          <p>Made for runners, everywhere. Photo: <a href="https://unsplash.com/photos/silhouette-photo-of-a-person-running-on-road-JnoNcfFwrNA" target="_blank" rel="noopener noreferrer" className="underline decoration-white/30 underline-offset-2 hover:text-bone">Lucas Favre / Unsplash</a></p>
         </div>
       </Container>
     </footer>

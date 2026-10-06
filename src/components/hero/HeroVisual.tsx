@@ -1,5 +1,4 @@
 import { ShieldCheck } from "lucide-react";
-import { MediaImage } from "@/components/ui/MediaImage";
 import { SITE } from "@/data/site";
 
 /** Stylised GPS-route scene. Replaced automatically when SITE.heroImage is set. */
@@ -69,16 +68,50 @@ function RouteScene() {
   );
 }
 
+function HudStats() {
+  return (
+    <>
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.22em] text-mist">Your distance</p>
+          <p className="font-display text-5xl font-extrabold leading-none sm:text-6xl">
+            10<span className="text-accent">K</span>
+          </p>
+        </div>
+        <dl className="flex gap-6 text-right">
+          <div>
+            <dt className="text-[11px] uppercase tracking-[0.22em] text-mist">Pace</dt>
+            <dd className="font-display text-2xl font-bold">4:32<span className="text-sm text-mist">/km</span></dd>
+          </div>
+          <div>
+            <dt className="text-[11px] uppercase tracking-[0.22em] text-mist">Time</dt>
+            <dd className="font-display text-2xl font-bold">45:20</dd>
+          </div>
+        </dl>
+      </div>
+      <p className="mt-3 flex items-center gap-2 border-t border-white/10 pt-3 text-xs font-medium uppercase tracking-[0.2em] text-accent">
+        <ShieldCheck aria-hidden className="size-4" /> Proof verified
+      </p>
+    </>
+  );
+}
+
 export function HeroVisual() {
+  // With a photo, the hero background is the picture; only the stats card floats above it.
+  if (SITE.heroImage) {
+    return (
+      <div className="w-full max-w-md border border-white/15 bg-ink/55 p-5 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.8)] backdrop-blur-xl lg:ml-auto">
+        <div className="mb-4 flex w-fit items-center gap-2 border border-white/15 bg-ink/60 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em]">
+          <span aria-hidden className="size-1.5 rounded-full bg-accent" /> Live route
+        </div>
+        <HudStats />
+      </div>
+    );
+  }
+
   return (
     <div className="relative aspect-[4/5] w-full overflow-hidden border border-white/10 bg-charcoal shadow-[0_40px_120px_-40px_rgb(255_90_31/0.45)] sm:aspect-[5/4] lg:aspect-[4/5]">
-      <MediaImage
-        src={SITE.heroImage}
-        alt="A runner at dawn on an empty road"
-        priority
-        sizes="(min-width:1024px) 45vw, 100vw"
-        fallback={<RouteScene />}
-      />
+      <RouteScene />
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/20" />
 
       <div className="absolute left-4 top-4 flex items-center gap-2 border border-white/15 bg-ink/60 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] backdrop-blur-md">
@@ -86,27 +119,7 @@ export function HeroVisual() {
       </div>
 
       <div className="absolute inset-x-4 bottom-4 border border-white/15 bg-ink/65 p-4 backdrop-blur-xl sm:inset-x-6 sm:bottom-6 sm:p-5">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.22em] text-mist">Your distance</p>
-            <p className="font-display text-5xl font-extrabold leading-none sm:text-6xl">
-              10<span className="text-accent">K</span>
-            </p>
-          </div>
-          <dl className="flex gap-6 text-right">
-            <div>
-              <dt className="text-[11px] uppercase tracking-[0.22em] text-mist">Pace</dt>
-              <dd className="font-display text-2xl font-bold">4:32<span className="text-sm text-mist">/km</span></dd>
-            </div>
-            <div>
-              <dt className="text-[11px] uppercase tracking-[0.22em] text-mist">Time</dt>
-              <dd className="font-display text-2xl font-bold">45:20</dd>
-            </div>
-          </dl>
-        </div>
-        <p className="mt-3 flex items-center gap-2 border-t border-white/10 pt-3 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-          <ShieldCheck aria-hidden className="size-4" /> Proof verified
-        </p>
+        <HudStats />
       </div>
     </div>
   );

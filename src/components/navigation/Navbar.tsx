@@ -100,7 +100,7 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Button href={SITE.loginHref} variant="ghost" className="!min-h-10 !px-5 !text-sm" arrow={false}>
+                <Button href={SITE.loginHref} className="!min-h-10 !px-5 !text-sm" arrow={false}>
                   Login
                 </Button>
                 <Button href={SITE.registerHref} className="!min-h-10 !px-5 !text-sm" arrow={false}>
@@ -158,7 +158,7 @@ export function Navbar() {
               <Button href={SITE.registerHref} size="lg" className="w-full" onClick={() => setOpen(false)}>
                 Sign Up
               </Button>
-              <Button href={SITE.loginHref} variant="ghost" size="lg" arrow={false} className="w-full" onClick={() => setOpen(false)}>
+              <Button href={SITE.loginHref} size="lg" arrow={false} className="w-full" onClick={() => setOpen(false)}>
                 Login
               </Button>
             </>

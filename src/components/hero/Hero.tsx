@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { MediaImage } from "@/components/ui/MediaImage";
 import { SITE } from "@/data/site";
 import { DISTANCES } from "@/data/distances";
 import { HeroVisual } from "./HeroVisual";
@@ -8,6 +9,15 @@ export function Hero() {
   return (
     <section id="top" aria-labelledby="hero-title" className="grain relative isolate overflow-hidden pt-28 pb-16 sm:pt-32 lg:flex lg:min-h-dvh lg:items-center lg:pb-20 lg:pt-28">
       <div aria-hidden className="absolute inset-0 -z-10">
+        <div className="absolute inset-y-0 left-0 right-0 lg:left-[22%] lg:[mask-image:linear-gradient(to_right,transparent,black_38%)]">
+          <MediaImage src={SITE.heroImage} alt="" priority sizes="100vw" fallback={null} className="object-cover object-[50%_40%]" />
+        </div>
+        {SITE.heroImage && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/70" />
+          </>
+        )}
         <div className="absolute -right-1/4 -top-1/3 size-[90vmin] animate-drift rounded-full bg-accent/20 blur-[140px] motion-reduce:animate-none" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(255_255_255/0.04)_1px,transparent_1px)] bg-[size:25%_100%] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
       </div>
@@ -29,11 +39,11 @@ export function Hero() {
             Choose your distance, run your route, submit your proof and earn your finisher medal.
           </p>
 
-          <ul className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-3" aria-label="Distances">
+          <ul className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 sm:gap-x-8" aria-label="Distances">
             {DISTANCES.map((d, i) => (
-              <li key={d.id} className="flex items-center gap-8">
+              <li key={d.id} className="flex items-center gap-6 sm:gap-8">
                 <span className="font-display text-3xl font-bold tracking-wide sm:text-4xl">{d.label}</span>
-                {i < DISTANCES.length - 1 && <span aria-hidden className="h-6 w-px rotate-12 bg-white/25" />}
+                {i < DISTANCES.length - 1 && <span aria-hidden className="hidden h-6 w-px rotate-12 bg-white/25 sm:block" />}
               </li>
             ))}
           </ul>

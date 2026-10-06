@@ -7,8 +7,8 @@ export const SITE = {
   description:
     "Run anywhere, complete your distance and earn your finisher medal with RunNation India. Choose 3K, 5K, 10K or 21.1K virtual running events.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  /** Swap for a real asset path (e.g. "/images/hero.jpg") when photography is ready. */
-  heroImage: null as string | null,
+  /** Local photo path. Set to null to fall back to the illustrated route scene. */
+  heroImage: "/images/hero-runner.jpg" as string | null,
   medalImage: null as string | null,
   /** Set real profile URLs to enable the "Follow now" buttons on the dashboard. */
   social: {
