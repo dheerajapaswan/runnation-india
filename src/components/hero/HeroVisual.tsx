@@ -1,4 +1,7 @@
-import { ShieldCheck } from "lucide-react";
+import { Check, ShieldCheck } from "lucide-react";
+import { DISTANCES, getPricing } from "@/data/distances";
+import { UPCOMING_EVENT } from "@/data/event";
+import { formatInr } from "@/lib/utils";
 import { SITE } from "@/data/site";
 
 /** Stylised GPS-route scene. Replaced automatically when SITE.heroImage is set. */
@@ -68,6 +71,40 @@ function RouteScene() {
   );
 }
 
+function EventCard() {
+  const e = UPCOMING_EVENT;
+  const perks = ["Finisher medal", "E-certificate", "E-BIB"];
+  return (
+    <aside aria-label="Event details" className="w-full max-w-md border border-white/15 bg-ink/60 p-5 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.8)] backdrop-blur-xl sm:p-6 lg:ml-auto">
+      <p className="flex w-fit items-center gap-2 border border-accent/50 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">
+        <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-accent motion-reduce:animate-none" />
+        {e.registrationStatus === "open" ? "Registration open" : "Opening soon"}
+      </p>
+      <p className="mt-4 font-display text-3xl font-extrabold uppercase leading-none sm:text-4xl">
+        RunNation <span className="text-accent">Virtual Run</span> 2026
+      </p>
+      <p className="mt-2 text-sm text-mist">{e.dateLabel}. Run anywhere in India.</p>
+
+      <ul className="mt-5 grid grid-cols-4 gap-px border border-white/10 bg-white/10">
+        {DISTANCES.map((d) => (
+          <li key={d.id} className="bg-ink/80 px-2 py-3 text-center">
+            <span className="block font-display text-2xl font-extrabold leading-none">{d.label}</span>
+            <span className="mt-1 block text-xs font-semibold text-accent">{formatInr(getPricing(d.id).amountInr)}</span>
+          </li>
+        ))}
+      </ul>
+
+      <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-bone/80">
+        {perks.map((p) => (
+          <li key={p} className="flex items-center gap-1.5">
+            <Check aria-hidden className="size-3.5 text-accent" /> {p}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
 function HudStats() {
   return (
     <>
@@ -97,17 +134,8 @@ function HudStats() {
 }
 
 export function HeroVisual() {
-  // With a photo, the hero background is the picture; only the stats card floats above it.
-  if (SITE.heroImage) {
-    return (
-      <div className="w-full max-w-md border border-white/15 bg-ink/55 p-5 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.8)] backdrop-blur-xl lg:ml-auto">
-        <div className="mb-4 flex w-fit items-center gap-2 border border-white/15 bg-ink/60 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em]">
-          <span aria-hidden className="size-1.5 rounded-full bg-accent" /> Live route
-        </div>
-        <HudStats />
-      </div>
-    );
-  }
+  // With a photo, the hero background is the picture; only the event card floats above it.
+  if (SITE.heroImage) return <EventCard />;
 
   return (
     <div className="relative aspect-[4/5] w-full overflow-hidden border border-white/10 bg-charcoal shadow-[0_40px_120px_-40px_rgb(255_90_31/0.45)] sm:aspect-[5/4] lg:aspect-[4/5]">
