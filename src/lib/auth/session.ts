@@ -57,9 +57,10 @@ export async function getSession(role: Role): Promise<string | null> {
 }
 
 export function passwordMatches(input: string): boolean {
-  const expected = process.env.ADMIN_PASSWORD;
+  // Trim both sides: a stray space/newline pasted into the host's env UI must not lock the admin out.
+  const expected = process.env.ADMIN_PASSWORD?.trim();
   if (!expected) return false;
-  const a = createHmac("sha256", "cmp").update(input).digest();
+  const a = createHmac("sha256", "cmp").update(input.trim()).digest();
   const b = createHmac("sha256", "cmp").update(expected).digest();
   return timingSafeEqual(a, b);
 }
