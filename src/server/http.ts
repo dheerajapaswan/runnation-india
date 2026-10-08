@@ -5,15 +5,18 @@ import { ZodError } from "zod";
 import { getSession, type Role } from "@/lib/auth/session";
 
 export class HttpError extends Error {
-  constructor(public status: number, message: string, public fields?: Record<string, string>) {
+  constructor(public status: number, message: string, public fields?: Record<string, string>, public retryAfter?: number) {
     super(message);
   }
 }
 
 export const ok = <T,>(data: T, status = 200) => NextResponse.json({ success: true, data }, { status });
 
-function fail(status: number, message: string, fields?: Record<string, string>) {
-  return NextResponse.json({ success: false, message, ...(fields ? { fields } : {}) }, { status });
+function fail(status: number, message: string, fields?: Record<string, string>, retryAfter?: number) {
+  return NextResponse.json(
+    { success: false, message, ...(fields ? { fields } : {}) },
+    { status, headers: retryAfter ? { "Retry-After": String(retryAfter) } : undefined },
+  );
 }
 
 /** Maps any thrown error to a safe JSON response. Never leaks internals. */
@@ -21,7 +24,7 @@ export async function handle(fn: () => Promise<NextResponse>): Promise<NextRespo
   try {
     return await fn();
   } catch (e) {
-    if (e instanceof HttpError) return fail(e.status, e.message, e.fields);
+    if (e instanceof HttpError) return fail(e.status, e.message, e.fields, e.retryAfter);
     if (e instanceof ZodError) {
       const fields: Record<string, string> = {};
       for (const issue of e.issues) fields[String(issue.path[0] ?? "body")] ??= issue.message;

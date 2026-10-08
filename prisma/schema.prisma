@@ -35,6 +35,15 @@ enum ProofStatus {
   REJECTED
 }
 
+/// Fixed-window counters for login throttling (see src/server/rate-limit.ts).
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
 model Event {
   id            String         @id @default(uuid())
   slug          String         @unique
